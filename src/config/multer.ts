@@ -1,8 +1,8 @@
-const multer = require('multer');
-const path = require('path');
-const crypto = require('crypto');
+import multer, { Options } from 'multer';
+import path from 'path';
+import crypto from 'crypto';
 
-module.exports = {
+const multerConfig: Options = {
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             let dir;
@@ -11,7 +11,7 @@ module.exports = {
             } else if (file.mimetype === 'application/pdf') {
                 dir = path.resolve(__dirname, "..", "..", "tmp", "uploads", "pdf");
             } else {
-                cb(new Error("invalid file type."));
+                cb(new Error("invalid file type."), '');
                 return;
             }
 
@@ -19,7 +19,7 @@ module.exports = {
         },
         filename: (req, file, cb) => {
             crypto.randomBytes(16, (err, hash) => {
-                if (err) cb(err);
+                if (err) cb(err, '');
 
                 const fileName = `${hash.toString('hex')}-${file.originalname}`;
 
@@ -44,7 +44,9 @@ module.exports = {
         if (allowedMimes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error("invalid file type."));
+            cb(null, false);
         }
     },
 };
+
+export default multerConfig;
