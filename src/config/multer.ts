@@ -28,7 +28,7 @@ const multerConfig: Options = {
         },
     }),
     limits: {
-        fileSize: 4 * 1024 * 1024,
+        fileSize: 8 * 1024 * 1024,
     },
     fileFilter: (req, file, cb) => {
         const allowedMimes = [
@@ -42,10 +42,10 @@ const multerConfig: Options = {
         ];
 
         if (allowedMimes.includes(file.mimetype)) {
-            cb(null, true);
-        } else {
-            cb(null, false);
+            return cb(null, true);
         }
+
+        cb(null, false);
     },
 };
 
